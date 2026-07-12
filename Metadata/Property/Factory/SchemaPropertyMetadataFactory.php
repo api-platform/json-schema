@@ -73,23 +73,8 @@ final class SchemaPropertyMetadataFactory implements PropertyMetadataFactoryInte
         // on output a non-resource object is serialized by the standard object normalizer, which embeds non-resource properties regardless of readableLink (see AbstractItemNormalizer::supportsNormalization())
         // For resource-typed properties however, the circular reference handler (see AbstractItemNormalizer::$defaultContext) may produce an IRI, so isReadableLink should determine the schema
         if (!$isInput && !$this->isResourceClass($resourceClass)) {
-            if (method_exists(PropertyInfoExtractor::class, 'getType')) {
-                if (!$propertyMetadata->getNativeType()?->isSatisfiedBy(fn (Type $t) => $t instanceof ObjectType && $this->resourceClassResolver->isResourceClass($t->getClassName()))) {
-                    $link = true;
-                }
-            } else {
-                $propertyTypeIsResource = false;
-                foreach ($propertyMetadata->getBuiltinTypes() ?? [] as $builtinType) {
-                    $className = $builtinType->isCollection() ? ($builtinType->getCollectionValueTypes()[0] ?? null)?->getClassName() : $builtinType->getClassName();
-                    if ($className && $this->resourceClassResolver->isResourceClass($className)) {
-                        $propertyTypeIsResource = true;
-                        break;
-                    }
-                }
-
-                if (!$propertyTypeIsResource) {
-                    $link = true;
-                }
+            if (!$propertyMetadata->getNativeType()?->isSatisfiedBy(fn (Type $t) => $t instanceof ObjectType && $this->resourceClassResolver->isResourceClass($t->getClassName()))) {
+                $link = true;
             }
         }
 
