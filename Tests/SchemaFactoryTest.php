@@ -41,7 +41,6 @@ use ApiPlatform\Metadata\ResourceClassResolverInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
-use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\TypeInfo\Type;
 
@@ -51,10 +50,6 @@ class SchemaFactoryTest extends TestCase
 
     public function testBuildSchemaForNonResourceClass(): void
     {
-        if (!method_exists(PropertyInfoExtractor::class, 'getType')) { // @phpstan-ignore-line symfony/property-info 6.4 is still allowed and this may be true
-            $this->markTestSkipped('This test only supports type-info component');
-        }
-
         $resourceMetadataFactoryProphecy = $this->prophesize(ResourceMetadataCollectionFactoryInterface::class);
 
         $propertyNameCollectionFactoryProphecy = $this->prophesize(PropertyNameCollectionFactoryInterface::class);
@@ -599,10 +594,6 @@ class SchemaFactoryTest extends TestCase
      */
     private function buildPropertiesWithReference(string $propertyName, ApiProperty $propertyMetadata): array
     {
-        if (!method_exists(PropertyInfoExtractor::class, 'getType')) { // @phpstan-ignore-line symfony/property-info 6.4 is still allowed and this may be true
-            $this->markTestSkipped('This test only supports type-info component');
-        }
-
         $propertyNameCollectionFactory = $this->createStub(PropertyNameCollectionFactoryInterface::class);
         $propertyNameCollectionFactory->method('create')->willReturnCallback(
             static fn (string $class): PropertyNameCollection => new PropertyNameCollection(

@@ -25,7 +25,6 @@ use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\Property\Factory\PropertyMetadataFactoryInterface;
 use ApiPlatform\Metadata\ResourceClassResolverInterface;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
 use Symfony\Component\TypeInfo\Type;
 
 class SchemaPropertyMetadataFactoryTest extends TestCase
@@ -88,10 +87,6 @@ class SchemaPropertyMetadataFactoryTest extends TestCase
 
     public function testUnionTypeAnyOfIsArray(): void
     {
-        if (!method_exists(PropertyInfoExtractor::class, 'getType')) { // @phpstan-ignore-line symfony/property-info 6.4 is still allowed and this may be true
-            $this->markTestSkipped('This test only supports type-info component');
-        }
-
         $resourceClassResolver = $this->createMock(ResourceClassResolverInterface::class);
         $apiProperty = new ApiProperty(nativeType: Type::union(Type::string(), Type::int()));
         $decorated = $this->createMock(PropertyMetadataFactoryInterface::class);
@@ -115,10 +110,6 @@ class SchemaPropertyMetadataFactoryTest extends TestCase
      */
     public function testRelationWithGenIdFalseIsEmbeddedInOutputSchema(): void
     {
-        if (!method_exists(PropertyInfoExtractor::class, 'getType')) { // @phpstan-ignore-line symfony/property-info 6.4 is still allowed and this may be true
-            $this->markTestSkipped('This test only supports type-info component');
-        }
-
         $resourceClassResolver = $this->createMock(ResourceClassResolverInterface::class);
         $resourceClassResolver->method('isResourceClass')->willReturn(true);
 
@@ -143,10 +134,6 @@ class SchemaPropertyMetadataFactoryTest extends TestCase
      */
     public function testRelationOnNonResourceParentFollowsReadableLinkInOutputSchema(): void
     {
-        if (!method_exists(PropertyInfoExtractor::class, 'getType')) { // @phpstan-ignore-line symfony/property-info 6.4 is still allowed and this may be true
-            $this->markTestSkipped('This test only supports type-info component');
-        }
-
         $resourceClassResolver = $this->createMock(ResourceClassResolverInterface::class);
         // the parent (DummyWithEnum) is not a resource, the related class (Dummy) is
         $resourceClassResolver->method('isResourceClass')->willReturnCallback(static fn (string $class): bool => Dummy::class === $class);
@@ -170,10 +157,6 @@ class SchemaPropertyMetadataFactoryTest extends TestCase
      */
     public function testNonResourceRelationOnNonResourceParentIsEmbeddedInOutputSchema(): void
     {
-        if (!method_exists(PropertyInfoExtractor::class, 'getType')) { // @phpstan-ignore-line symfony/property-info 6.4 is still allowed and this may be true
-            $this->markTestSkipped('This test only supports type-info component');
-        }
-
         $resourceClassResolver = $this->createMock(ResourceClassResolverInterface::class);
         // neither the parent nor the property type is a resource
         $resourceClassResolver->method('isResourceClass')->willReturn(false);
@@ -195,10 +178,6 @@ class SchemaPropertyMetadataFactoryTest extends TestCase
      */
     public function testRelationOnResourceParentStaysIriReference(): void
     {
-        if (!method_exists(PropertyInfoExtractor::class, 'getType')) { // @phpstan-ignore-line symfony/property-info 6.4 is still allowed and this may be true
-            $this->markTestSkipped('This test only supports type-info component');
-        }
-
         $resourceClassResolver = $this->createMock(ResourceClassResolverInterface::class);
         // both the parent and the related class are resources
         $resourceClassResolver->method('isResourceClass')->willReturn(true);
@@ -216,10 +195,6 @@ class SchemaPropertyMetadataFactoryTest extends TestCase
 
     public function testMixed(): void
     {
-        if (!method_exists(PropertyInfoExtractor::class, 'getType')) { // @phpstan-ignore-line symfony/property-info 6.4 is still allowed and this may be true
-            $this->markTestSkipped('This test only supports type-info component');
-        }
-
         $resourceClassResolver = $this->createMock(ResourceClassResolverInterface::class);
         $apiProperty = new ApiProperty(nativeType: Type::mixed());
         $decorated = $this->createMock(PropertyMetadataFactoryInterface::class);
